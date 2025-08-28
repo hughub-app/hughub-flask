@@ -3,6 +3,7 @@ from flask_smorest import Api
 from extension import db
 from recipes.recipe_api import blp as RecipesBlueprint
 from mood.mood_api import blp as MoodBlueprint
+from children_info.children import blp as ChildBlueprint
 import config
 
 def create_app():
@@ -14,6 +15,7 @@ def create_app():
 
     api.register_blueprint(RecipesBlueprint)
     api.register_blueprint(MoodBlueprint)
+    api.register_blueprint(ChildBlueprint)
 
     return app
 
