@@ -1,0 +1,6 @@
+Flask-Cors   # Enable CORS (if frontend is separate)
+python-dotenv   # Load environment variables from a .env file
+flask
+psycopg2-binary==2.9.3
+gunicorn
+flask_smorest
