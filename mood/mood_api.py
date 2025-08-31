@@ -14,6 +14,10 @@ def add_mood():
     add_mood_entry(child_id, mood)
     return jsonify({"message": "Mood entry added", "child_id": child_id, "mood": mood})
 
+@blp.route("/on", methods=["GET"])
+def start():
+    return jsonify({"message": "Mood API is operational"})
+
 @blp.route("/history/<int:child_id>", methods=["GET"])
 def get_mood_history(child_id):
     moods = get_mood_entries(child_id)
