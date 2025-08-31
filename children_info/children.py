@@ -7,6 +7,10 @@ from datetime import datetime
 blp = Blueprint("children", __name__, url_prefix="/children",
                 description="Children Info Management API")
 
+@blp.route("/health", methods=["GET"])
+def health_check():
+    return jsonify({"status": "ok"}), 200
+
 # Create
 @blp.route("/", methods=["POST"])
 def create_child():
