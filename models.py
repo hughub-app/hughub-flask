@@ -30,33 +30,68 @@ class DietaryGuidelines(db.Model):
             "max_age": self.max_age,
         }
 
-# class Ingredient(db.Model):
-#     __tablename__ = 'ingredient'
+class Ingredient(db.Model):
+    __tablename__ = 'ingredients'
 
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String, nullable=False)
-#     category = db.Column(db.String, nullable=True)
+    ingredient_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    ingredient_name = db.Column(db.String(50), unique=True, nullable=False)
+    category = db.Column(db.String(50), nullable=False)
 
-# class Recipe(db.Model):
-#     __tablename__ = 'recipes'
+    def to_dict(self):
+        return {
+            "ingredient_id": self.ingredient_id,
+            "ingredient_name": self.ingredient_name,
+            "category": self.category
+        }
 
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String, nullable=False)
-#     description = db.Column(db.Text, nullable=True)
+class Recipe(db.Model):
+    __tablename__ = 'recipes'
 
-#     # relationship to recipe_ingredient
-#     ingredients = db.relationship('RecipeIngredient', back_populates='recipe')
+    recipe_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    recipe_name = db.Column(db.String(255), nullable=False)
+    recipe_type = db.Column(db.String(50), nullable=True)
+    cuisine_type = db.Column(db.String(50), nullable=True)
+    dietary_preferences = db.Column(db.String(100), nullable=True)
+    cooking_steps = db.Column(db.Text, nullable=True)
+    servings_veg_legumes_beans = db.Column(db.Numeric(4, 2), nullable=True)
+    servings_fruit = db.Column(db.Numeric(4, 2), nullable=True)
+    servings_grain = db.Column(db.Numeric(4, 2), nullable=True)
+    servings_meat_fish_eggs_nuts_seeds = db.Column(db.Numeric(4, 2), nullable=True)
+    servings_milk_yoghurt_cheese = db.Column(db.Numeric(4, 2), nullable=True)
 
-# class RecipeIngredient(db.Model):
-#     __tablename__ = 'recipe_ingredient'
+    recipe_ingredients = db.relationship(   
+        'RecipeIngredient',
+        back_populates='recipe',
+        cascade='all, delete-orphan'
+    )
 
-#     id = db.Column(db.Integer, primary_key=True)
-#     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), nullable=False)
-#     ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredient.id'), nullable=False)
-#     quantity = db.Column(db.String, nullable=True)
+    def to_dict(self):
+        return {
+            "recipe_id": self.recipe_id,
+            "recipe_name": self.recipe_name,
+            "recipe_type": self.recipe_type,
+            "cuisine_type": self.cuisine_type,
+            "dietary_preferences": self.dietary_preferences,
+            "cooking_steps": self.cooking_steps,
+            "servings_veg_legumes_beans": float(self.servings_veg_legumes_beans) if self.servings_veg_legumes_beans is not None else None,
+            "servings_fruit": float(self.servings_fruit) if self.servings_fruit is not None else None,
+            "servings_grain": float(self.servings_grain) if self.servings_grain is not None else None,
+            "servings_meat_fish_eggs_nuts_seeds": float(self.servings_meat_fish_eggs_nuts_seeds) if self.servings_meat_fish_eggs_nuts_seeds is not None else None,
+            "servings_milk_yoghurt_cheese": float(self.servings_milk_yoghurt_cheese) if self.servings_milk_yoghurt_cheese is not None else None
+        }
 
-#     recipe = db.relationship('Recipe', back_populates='ingredients')
-#     ingredient = db.relationship('Ingredient')
+
+class RecipeIngredient(db.Model):
+    __tablename__ = 'recipe_ingredients'
+
+    recipe_ingredient_id = db.Column(db.Integer, primary_key=True)  
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id', ondelete='CASCADE'), nullable=False)
+    ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredients.ingredient_id', ondelete='CASCADE'), nullable=False)
+    grams = db.Column(db.Integer, nullable=True) 
+
+    recipe = db.relationship('Recipe', back_populates='recipe_ingredients')
+    ingredient = db.relationship('Ingredient')
+
 
 
 
