@@ -4,3 +4,4 @@ flask
 psycopg2-binary==2.9.3
 gunicorn
 flask_smorest
+Flask-SQLAlchemy
