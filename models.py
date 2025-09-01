@@ -36,12 +36,14 @@ class Ingredient(db.Model):
     ingredient_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     ingredient_name = db.Column(db.String(50), unique=True, nullable=False)
     category = db.Column(db.String(50), nullable=False)
+    emoji = db.Column(db.String(50), nullable=True)
 
     def to_dict(self):
         return {
             "ingredient_id": self.ingredient_id,
             "ingredient_name": self.ingredient_name,
-            "category": self.category
+            "category": self.category,
+            "emoji": self.emoji
         }
 
 class Recipe(db.Model):
