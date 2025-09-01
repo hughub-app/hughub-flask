@@ -92,6 +92,16 @@ class RecipeIngredient(db.Model):
     recipe = db.relationship('Recipe', back_populates='recipe_ingredients')
     ingredient = db.relationship('Ingredient')
 
+    def to_dict(self):
+        return {
+            "recipe_ingredient_id": self.recipe_ingredient_id,
+            "recipe_id": self.recipe_id,
+            "ingredient_id": self.ingredient_id,
+            "grams": self.grams,
+            "recipe_name": self.recipe.recipe_name if self.recipe else None,
+            "ingredient_name": self.ingredient.ingredient_name if self.ingredient else None
+        }
+
 
 
 
