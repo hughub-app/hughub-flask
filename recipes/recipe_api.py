@@ -7,15 +7,6 @@ blp = Blueprint("recipes", __name__, url_prefix="/recipes",
                 description="Recipe Recommander API")
 
 
-@blp.route("/recommend", methods=["GET"])
-def recommend_recipe():
-    age = request.args.get("age", type=int)
-    gender = request.args.get("gender", type=str)
-
-    recipes = get_recommended_recipes(age, gender)
-    return jsonify({"age": age, "gender": gender, "recipes": recipes})
-
-
 # ---------------------------
 # Read All APIs
 # ---------------------------
@@ -245,5 +236,5 @@ def get_recipe_ingredients():
         query = query.filter(RecipeIngredient.ingredient_id.in_(ingredient_ids))
 
     ingredients = query.all()
-    result = [ri.to_dict() for ri in ingredients]  # 需要在 RecipeIngredient model 中实现 to_dict()
+    result = [ri.to_dict() for ri in ingredients]  # Need to define to_dict in RecipeIngredient model
     return jsonify(result)

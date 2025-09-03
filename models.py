@@ -1,7 +1,7 @@
 from extension import db
 from datetime import date
 
-
+# Recipe-related models
 class DietaryGuidelines(db.Model):
     __tablename__ = 'dietary_guidelines'
 
@@ -82,7 +82,6 @@ class Recipe(db.Model):
             "servings_milk_yoghurt_cheese": float(self.servings_milk_yoghurt_cheese) if self.servings_milk_yoghurt_cheese is not None else None
         }
 
-
 class RecipeIngredient(db.Model):
     __tablename__ = 'recipe_ingredients'
 
@@ -104,24 +103,43 @@ class RecipeIngredient(db.Model):
             "ingredient_name": self.ingredient.ingredient_name if self.ingredient else None
         }
 
+# Children-related model
+class Children(db.Model):
+    __tablename__ = "children"
 
+    child_id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # SERIAL -> Integer + PK
+    name = db.Column(db.String(50), nullable=False)
+    gender = db.Column(db.String(10), nullable=False)
+    date_of_birth = db.Column(db.Date, nullable=False)
+    meals_per_day = db.Column(db.Integer, nullable=True) 
 
-
-class Child:
-    def __init__(self, name, dateOfBirth, gender, heightCm=None, weightKg=None):
-        self.id = None
-        self.name = name
-        self.dateOfBirth = dateOfBirth
-        self.gender = gender
-        self.heightCm = heightCm
-        self.weightKg = weightKg
 
     def to_dict(self):
         return {
-            "id": self.id,
+            "child_id": self.child_id,
             "name": self.name,
-            "dateOfBirth": self.dateOfBirth.isoformat(),
             "gender": self.gender,
-            "heightCm": self.heightCm,
-            "weightKg": self.weightKg,
+            "date_of_birth": self.date_of_birth.isoformat() if self.date_of_birth else None,
+            "meals_per_day": self.meals_per_day
+        }
+
+# Mood-related model
+class MoodLog(db.Model):
+    __tablename__ = "mood_logs"
+
+    mood_log_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    child_id = db.Column(db.Integer, db.ForeignKey('children.child_id', ondelete='CASCADE'), nullable=False)
+    mood = db.Column(db.String(50), nullable=False) 
+    notes = db.Column(db.Text, nullable=True)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    child = db.relationship('Children', backref='mood_logs')
+
+    def to_dict(self):
+        return {
+            "mood_log_id": self.mood_log_id,
+            "child_id": self.child_id,
+            "mood": self.mood,
+            "notes": self.notes,
+            "created_at": self.created_at.isoformat() if self.created_at else None
         }
