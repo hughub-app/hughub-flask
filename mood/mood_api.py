@@ -99,11 +99,11 @@ def get_all_mood_logs():
 # ---------------------------
 # Read One Mood Log
 # ---------------------------
-@blp.route("/<int:mood_log_id>", methods=["GET"])
-@blp.doc(description="Get a single mood log by ID")
-def get_mood_log(mood_log_id):
+@blp.route("/<int:child_id>", methods=["GET"])
+@blp.doc(description="Get a single mood log by using the child ID")
+def get_mood_log(child_id):
     """
-    Get a mood log by ID
+    Get a mood log by child ID
     ---
     parameters:
       - in: path
@@ -111,15 +111,23 @@ def get_mood_log(mood_log_id):
         schema:
           type: integer
         required: true
-        description: ID of the mood log
+        description: ID of the child 
     responses:
       200:
         description: Mood log object
       404:
         description: Mood log not found
     """
-    mood_log = MoodLog.query.get_or_404(mood_log_id)
-    return jsonify(mood_log.to_dict())
+    if not Children.query.get(child_id):
+        return jsonify({"error": "Child not found"}), 404
+    mood_logs = MoodLog.query.filter(MoodLog.child_id == child_id).all()
+    
+    result = [m.to_dict() for m in mood_logs]
+
+    return jsonify({
+        "child_id": child_id,
+        "mood_logs": result
+    })
 
 
 # ---------------------------

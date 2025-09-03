@@ -1,5 +1,6 @@
 from extension import db
 from datetime import date
+import datetime
 
 # Recipe-related models
 class DietaryGuidelines(db.Model):
@@ -131,7 +132,7 @@ class MoodLog(db.Model):
     child_id = db.Column(db.Integer, db.ForeignKey('children.child_id', ondelete='CASCADE'), nullable=False)
     mood = db.Column(db.String(50), nullable=False) 
     notes = db.Column(db.Text, nullable=True)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
 
     child = db.relationship('Children', backref='mood_logs')
 
