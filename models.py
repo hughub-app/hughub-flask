@@ -144,3 +144,36 @@ class MoodLog(db.Model):
             "notes": self.notes,
             "created_at": self.created_at.isoformat() if self.created_at else None
         }
+        
+# Meal-related model
+class Meals(db.Model):
+    __tablename__ = "meals"
+
+    meal_id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # SERIAL -> Integer + PK
+    meal_name = db.Column(db.String(50), nullable=False)
+    servings_fruit = db.Column(db.Numeric(10, 2), nullable=False, default=0)
+    servings_grain = db.Column(db.Numeric(10, 2), nullable=False, default=0)
+    servings_meat_fish_eggs_nuts_seeds = db.Column(db.Numeric(10, 2), nullable=False, default=0)
+    servings_milk_yoghurt_cheese = db.Column(db.Numeric(10, 2), nullable=False, default=0)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
+    servings_veg_legumes_beans = db.Column(db.Numeric(10, 2), nullable=False, default=0)
+    child_id = db.Column(db.Integer, db.ForeignKey("children.child_id"), nullable=False)
+    meal_type = db.Column(db.Text, nullable=False)
+
+
+    # Optional: Relationship with Children
+    child = db.relationship("Children", backref=db.backref("meals", lazy=True))
+
+    def to_dict(self):
+        return {
+            "meal_id": self.meal_id,
+            "meal_name": self.meal_name,
+            "servings_fruit": float(self.servings_fruit) if self.servings_fruit is not None else None,
+            "servings_grain": float(self.servings_grain) if self.servings_grain is not None else None,
+            "servings_meat_fish_eggs_nuts_seeds": float(self.servings_meat_fish_eggs_nuts_seeds) if self.servings_meat_fish_eggs_nuts_seeds is not None else None,
+            "servings_milk_yoghurt_cheese": float(self.servings_milk_yoghurt_cheese) if self.servings_milk_yoghurt_cheese is not None else None,
+            "servings_veg_legumes_beans": float(self.servings_veg_legumes_beans) if self.servings_veg_legumes_beans is not None else None,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "child_id": self.child_id,
+            "meal_type": self.meal_type
+        }
