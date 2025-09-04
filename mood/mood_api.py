@@ -148,9 +148,9 @@ def get_mood_log(child_id):
 @blp.arguments(UpdateMoodLog())  # request schema (partial)
 @blp.response(200, MoodLogSchema())  # response schema
 @blp.doc(description="Update a mood log by ID")
-def update_mood_log(mood_log_id):
-    mood = request.args.get("mood")
-    notes = request.args.get("notes")
+def update_mood_log(payload, mood_log_id):
+    mood = payload.get("mood")
+    notes = payload.get("notes")
 
     mood_log = MoodLog.query.get_or_404(mood_log_id)
 
@@ -219,25 +219,15 @@ def get_latest_mood(child_id):
 @blp.route("/range/<int:child_id>", methods=["GET"])
 @blp.arguments(MoodLogsRangeQuery, location="query")
 @blp.response(200, MoodLogSchema(many=True))  # response schema (array of MoodLog)
-def get_moods_by_time_range(child_id):
+def get_moods_by_time_range(query_args, child_id):       # <-- order matters
+    start_time = query_args["start"]
+    end_time = query_args["end"]
+    
     # check if the child exists
     child = Children.query.get(child_id)
     if not child:
         return jsonify({"error": "Child not found"}), 404
 
-    start_str = request.args.get("start")
-    end_str = request.args.get("end")
-
-    if not start_str or not end_str:
-        return jsonify({"error": "Missing start or end timestamp"}), 400
-
-    try:
-        start_time = datetime.fromisoformat(start_str)
-        end_time = datetime.fromisoformat(end_str)
-    except ValueError:
-        return jsonify({"error": "Invalid timestamp format, use ISO format"}), 400
-
-    # query mood logs in the specified time range
     mood_logs = (
         MoodLog.query
         .filter(
