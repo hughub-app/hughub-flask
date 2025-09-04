@@ -16,7 +16,6 @@ blp = Blueprint("meals", __name__, url_prefix="/meals", description="meals CRUD 
 @blp.response(201, Meal()) # response schema
 @blp.doc(description="Create a new meal record")
 def create_meal(payload):
-    # optional runtime check (not documented as error)
     if not Children.query.get(payload["child_id"]):
         return {"error": "Child not found"}, 404
 
@@ -59,7 +58,7 @@ def update_meal(payload, meal_id):
 
 
 @blp.route("/<int:meal_id>", methods=["DELETE"])
-@blp.response(200, MessageSchema()) # response schema
+@blp.response(200, MessageSchema())
 @blp.doc(description="Delete a meal by ID")
 def delete_meal(meal_id):
     meal = Meals.query.get_or_404(meal_id)
@@ -69,7 +68,7 @@ def delete_meal(meal_id):
 
 @blp.route("/range/<int:child_id>", methods=["GET"])
 @blp.arguments(MealsRangeQuery, location="query")
-@blp.response(200, Meal(many=True))  # response schema (array of Meal)
+@blp.response(200, Meal(many=True))
 @blp.doc(description="Get all meals for a child within a time range")
 def get_meals_by_time_range(query_args, child_id):
     start_time = query_args["start"]
