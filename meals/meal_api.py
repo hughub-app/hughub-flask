@@ -5,7 +5,7 @@ from models import Meals, Children
 from datetime import datetime
 
 from schemas.meals import (
-    Meal, CreateMeal, UpdateMeal,
+    Meal, CreateMeal, UpdateMeal, MealsRangeQuery
 )
 from schemas.common import MessageSchema
 
@@ -66,3 +66,28 @@ def delete_meal(meal_id):
     db.session.delete(meal)
     db.session.commit()
     return {"message": "Meal deleted"}
+
+@blp.route("/range/<int:child_id>", methods=["GET"])
+@blp.arguments(MealsRangeQuery, location="query")
+@blp.response(200, Meal(many=True))  # response schema (array of Meal)
+@blp.doc(description="Get all meals for a child within a time range")
+def get_meals_by_time_range(query_args, child_id):
+    start_time = query_args["start"]
+    end_time = query_args["end"]
+
+    child = Children.query.get(child_id)
+    if not child:
+        return {"error": "Child not found"}, 404
+
+    meals = (
+        Meals.query
+        .filter(
+            Meals.child_id == child_id,
+            Meals.created_at >= start_time,
+            Meals.created_at <= end_time
+        )
+        .order_by(Meals.created_at.asc())
+        .all()
+    )
+    
+    return meals

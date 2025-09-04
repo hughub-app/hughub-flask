@@ -29,6 +29,9 @@ class CreateMeal(_MealFields):
 class UpdateMeal(_MealFields):
     pass
 
+class MealsRangeQuery(Schema):
+    start = fields.DateTime(required=True)
+    end = fields.DateTime(required=True)
 # Response envelopes
 class MealMessageResponse(Schema):
     message = fields.String(required=True)
