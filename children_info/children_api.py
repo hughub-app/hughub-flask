@@ -3,7 +3,6 @@ from flask_smorest import Blueprint
 from flask import request
 from extension import db
 from models import Children  # assumes .to_dict() not needed; we return model, marshmallow dumps it
-from datetime import datetime
 
 from schemas.children import (
     Child, CreateChild, UpdateChild, GetChildrenQuery
@@ -18,10 +17,7 @@ blp = Blueprint("children", __name__, url_prefix="/children", description="Child
 @blp.route("/", methods=["GET"])
 @blp.arguments(GetChildrenQuery, location="query")
 @blp.response(200, Child(many=True))
-@blp.doc(
-    description="Get children with optional ID filter (comma-separated).",
-    tags=["children"]
-)
+@blp.doc(description="Get children with optional ID filter (comma-separated).")
 def get_children(query_args):
     raw_ids = query_args.get("ids")  # e.g. "1,2,3"
     ids = [int(x) for x in raw_ids.split(",")] if raw_ids else []
@@ -40,7 +36,7 @@ def get_children(query_args):
 @blp.route("/", methods=["POST"])
 @blp.arguments(CreateChild)               # request schema
 @blp.response(201, Child)                 # response schema
-@blp.doc(description="Create a new child", tags=["children"])
+@blp.doc(description="Create a new child")
 def create_child(payload):
     child = Children(
         name=payload["name"],
@@ -60,14 +56,7 @@ def create_child(payload):
 @blp.route("/<int:child_id>", methods=["PUT"])
 @blp.arguments(UpdateChild)               # partial update allowed by schema
 @blp.response(200, Child)
-@blp.doc(
-    description="Update a child by ID",
-    tags=["children"],
-    parameters=[{
-        "name": "child_id", "in": "path", "required": True,
-        "schema": {"type": "integer"}, "description": "Child ID to update"
-    }]
-)
+@blp.doc(description="Update a child by ID")
 def update_child(payload, child_id):
     child = Children.query.get_or_404(child_id)
 
@@ -84,14 +73,7 @@ def update_child(payload, child_id):
 # ---------------------------
 @blp.route("/<int:child_id>", methods=["DELETE"])
 @blp.response(200, MessageSchema())
-@blp.doc(
-    description="Delete a child by ID",
-    tags=["children"],
-    parameters=[{
-        "name": "child_id", "in": "path", "required": True,
-        "schema": {"type": "integer"}, "description": "Child ID to delete"
-    }]
-)
+@blp.doc(description="Delete a child by ID")
 def delete_child(child_id):
     child = Children.query.get_or_404(child_id)
     db.session.delete(child)

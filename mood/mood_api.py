@@ -20,7 +20,7 @@ blp = Blueprint("mood_logs", __name__, url_prefix="/mood_logs",
 @blp.route("/", methods=["POST"])
 @blp.arguments(CreateMoodLog())  # request schema
 @blp.response(201, MoodLogSchema())  # response schema
-@blp.doc(description="Create a new mood log", tags=["mood_logs"])
+@blp.doc(description="Create a new mood log")
 def create_mood_log(payload):
     """
     Create a new mood log
@@ -65,7 +65,7 @@ def create_mood_log(payload):
 # ---------------------------
 @blp.route("/", methods=["GET"])
 @blp.response(200, MoodLogSchema(many=True))  # response schema (array of MoodLog)
-@blp.doc(description="Get all mood logs with optional filters", tags=["mood_logs"])
+@blp.doc(description="Get all mood logs with optional filters")
 def get_all_mood_logs():
     """
     Get all mood logs
@@ -147,19 +147,7 @@ def get_mood_log(child_id):
 @blp.route("/<int:mood_log_id>", methods=["PUT"])
 @blp.arguments(UpdateMoodLog())  # request schema (partial)
 @blp.response(200, MoodLogSchema())  # response schema
-@blp.doc(
-    description="Update a mood log by ID",
-    tags=["mood_logs"],
-    parameters=[
-        {
-            "in": "path",
-            "name": "mood_log_id",
-            "schema": {"type": "integer"},
-            "required": True,
-            "description": "ID of the mood log to update"
-        },
-    ],
-)
+@blp.doc(description="Update a mood log by ID")
 def update_mood_log(mood_log_id):
     mood = request.args.get("mood")
     notes = request.args.get("notes")
@@ -181,16 +169,7 @@ def update_mood_log(mood_log_id):
 # ---------------------------
 @blp.route("/<int:mood_log_id>", methods=["DELETE"])
 @blp.response(200, MessageSchema())  # response schema
-@blp.doc(description="Delete a mood log by ID", tags=["mood_logs"],
-         parameters=[
-             {
-                 "in": "path",
-                 "name": "mood_log_id",
-                 "schema": {"type": "integer"},
-                 "required": True,
-                 "description": "ID of the mood log to delete"
-             }
-])
+@blp.doc(description="Delete a mood log by ID")
 def delete_mood_log(mood_log_id):
     """
     Delete a mood log
@@ -216,21 +195,7 @@ def delete_mood_log(mood_log_id):
 
 @blp.route("/latest/<int:child_id>", methods=["GET"])
 @blp.response(200, MoodLog())  # response schema
-@blp.doc(
-    description="Get the latest mood log for a specific child",
-    parameters=[
-        {
-            "in": "path",
-            "name": "child_id",
-            "schema": {"type": "integer"},
-            "required": True,
-            "description": "ID of the child to fetch the latest mood log for"
-        }
-    ],
-    responses={
-        404: {"description": "Child not found or no mood logs available"}
-    }
-)
+@blp.doc(description="Get the latest mood log for a specific child")
 def get_latest_mood(child_id):
     # ensure the child exists
     child = Children.query.get(child_id)
@@ -252,24 +217,8 @@ def get_latest_mood(child_id):
 
 
 @blp.route("/range/<int:child_id>", methods=["GET"])
-@blp.response(200, MoodLogSchema(many=True))  # response schema (array of MoodLog)
 @blp.arguments(MoodLogsRangeQuery, location="query")
-@blp.doc(
-    description="Get all mood logs for a child between two timestamps",
-    parameters=[
-        {
-            "in": "path",
-            "name": "child_id",
-            "schema": {"type": "integer"},
-            "required": True,
-            "description": "ID of the child to fetch mood logs for"
-        },
-    ],
-    responses={
-        400: {"description": "Missing or invalid parameters"},
-        404: {"description": "Child not found or no mood logs in the range"}
-    }
-)
+@blp.response(200, MoodLogSchema(many=True))  # response schema (array of MoodLog)
 def get_moods_by_time_range(child_id):
     # check if the child exists
     child = Children.query.get(child_id)

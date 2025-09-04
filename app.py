@@ -35,7 +35,7 @@ def create_app():
             },
         )
 
-    # ---- Global tags (these are the groups you’ll see in Swagger UI)
+    # ---- Global tags
     api.register_blueprint(RecipesBlueprint)
     api.register_blueprint(MealBlueprint)
     api.register_blueprint(MoodBlueprint)

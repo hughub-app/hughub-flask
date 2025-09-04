@@ -13,7 +13,6 @@ class MoodLog(Schema):
 
 # Query schemas
 class MoodLogsRangeQuery(Schema):
-    child_id = fields.Int(required=True)
     start = fields.DateTime(required=True)
     end = fields.DateTime(required=True)
 

@@ -14,7 +14,7 @@ blp = Blueprint("meals", __name__, url_prefix="/meals", description="meals CRUD 
 @blp.route("/", methods=["POST"])
 @blp.arguments(CreateMeal()) # request schema
 @blp.response(201, Meal()) # response schema
-@blp.doc(description="Create a new meal record", tags=["meals"])
+@blp.doc(description="Create a new meal record")
 def create_meal(payload):
     # optional runtime check (not documented as error)
     if not Children.query.get(payload["child_id"]):
@@ -38,14 +38,7 @@ def create_meal(payload):
 
 @blp.route("/child/<int:child_id>", methods=["GET"])
 @blp.response(200, Meal(many=True)) # response schema (array of Meal)
-@blp.doc(
-    description="Get all meals for a specific child",
-    tags=["meals"],
-    parameters=[{
-        "name": "child_id", "in": "path", "description": "ID of the child",
-        "required": True, "schema": {"type": "integer"}
-    }]
-)
+@blp.doc(description="Get all meals for a specific child")
 def get_meals_by_child(child_id):
     if not Children.query.get(child_id):
         return {"error": "Child not found"}, 404
@@ -56,14 +49,7 @@ def get_meals_by_child(child_id):
 @blp.route("/<int:meal_id>", methods=["PUT"])
 @blp.arguments(UpdateMeal()) # request schema (partial)
 @blp.response(200, Meal()) # response schema
-@blp.doc(
-    description="Update a meal by ID",
-    tags=["meals"],
-    parameters=[{
-        "name": "meal_id", "in": "path", "description": "ID of the meal",
-        "required": True, "schema": {"type": "integer"}
-    }]
-)
+@blp.doc(description="Update a meal by ID")
 def update_meal(payload, meal_id):
     meal = Meals.query.get_or_404(meal_id)
     for k, v in payload.items():
@@ -74,14 +60,7 @@ def update_meal(payload, meal_id):
 
 @blp.route("/<int:meal_id>", methods=["DELETE"])
 @blp.response(200, MessageSchema()) # response schema
-@blp.doc(
-    description="Delete a meal by ID",
-    tags=["meals"],
-    parameters=[{
-        "name": "meal_id", "in": "path", "description": "ID of the meal",
-        "required": True, "schema": {"type": "integer"}
-    }]
-)
+@blp.doc(description="Delete a meal by ID")
 def delete_meal(meal_id):
     meal = Meals.query.get_or_404(meal_id)
     db.session.delete(meal)
