@@ -4,7 +4,7 @@ from extension import db
 from models import Meals, Children
 from datetime import datetime
 
-from schemas.meal import (
+from schemas.meals import (
     Meal, CreateMeal, UpdateMeal,
 )
 from schemas.common import MessageSchema

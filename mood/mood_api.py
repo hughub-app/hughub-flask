@@ -3,9 +3,10 @@ from flask import request, jsonify
 from models import MoodLog, Children
 from extension import db
 from datetime import datetime
-from schemas.mood_log import (
+from schemas.mood_logs import (
     MoodLog as MoodLogSchema,
     CreateMoodLog,
+    MoodLogsRangeQuery,
     UpdateMoodLog,
 )
 from schemas.common import MessageSchema
@@ -252,6 +253,7 @@ def get_latest_mood(child_id):
 
 @blp.route("/range/<int:child_id>", methods=["GET"])
 @blp.response(200, MoodLogSchema(many=True))  # response schema (array of MoodLog)
+@blp.arguments(MoodLogsRangeQuery, location="query")
 @blp.doc(
     description="Get all mood logs for a child between two timestamps",
     parameters=[
@@ -262,20 +264,6 @@ def get_latest_mood(child_id):
             "required": True,
             "description": "ID of the child to fetch mood logs for"
         },
-        {
-            "in": "query",
-            "name": "start",
-            "schema": {"type": "string", "format": "date-time"},
-            "required": True,
-            "description": "Start timestamp (ISO format, e.g. 2025-09-01T00:00:00)"
-        },
-        {
-            "in": "query",
-            "name": "end",
-            "schema": {"type": "string", "format": "date-time"},
-            "required": True,
-            "description": "End timestamp (ISO format, e.g. 2025-09-03T23:59:59)"
-        }
     ],
     responses={
         400: {"description": "Missing or invalid parameters"},
