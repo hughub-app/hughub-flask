@@ -36,11 +36,6 @@ def create_app():
         )
 
     # ---- Global tags (these are the groups you’ll see in Swagger UI)
-    api.spec.tag({"name": "recipes", "description": "Recipe Recommander API"})
-    api.spec.tag({"name": "mood", "description": "Children Emotion API"})
-    api.spec.tag({"name": "children", "description": "Children Info Management API"})
-    api.spec.tag({"name": "meal", "description": "Children Meal Management API"})
-
     api.register_blueprint(RecipesBlueprint)
     api.register_blueprint(MealBlueprint)
     api.register_blueprint(MoodBlueprint)

@@ -13,9 +13,9 @@ class MoodLog(Schema):
 
 # Query schemas
 class MoodLogsRangeQuery(Schema):
-    child_id = fields.Int(required=True, description="ID of the child to fetch mood logs for")
-    start = fields.DateTime(required=True, description="Start timestamp (ISO format, e.g. 2025-09-01T00:00:00)")
-    end = fields.DateTime(required=True, description="End timestamp (ISO format, e.g. 2025-09-03T23:59:59)")
+    child_id = fields.Int(required=True)
+    start = fields.DateTime(required=True)
+    end = fields.DateTime(required=True)
 
 # ----- Requests -----
 class CreateMoodLog(Schema):

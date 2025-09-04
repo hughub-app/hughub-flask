@@ -11,7 +11,7 @@ from schemas.mood_logs import (
 )
 from schemas.common import MessageSchema
 
-blp = Blueprint("mood", __name__, url_prefix="/mood_logs",
+blp = Blueprint("mood_logs", __name__, url_prefix="/mood_logs",
                 description="Mood Logs API")
 
 # ---------------------------
@@ -20,7 +20,7 @@ blp = Blueprint("mood", __name__, url_prefix="/mood_logs",
 @blp.route("/", methods=["POST"])
 @blp.arguments(CreateMoodLog())  # request schema
 @blp.response(201, MoodLogSchema())  # response schema
-@blp.doc(description="Create a new mood log", tags=["mood_log"])
+@blp.doc(description="Create a new mood log", tags=["mood_logs"])
 def create_mood_log(payload):
     """
     Create a new mood log
@@ -65,7 +65,7 @@ def create_mood_log(payload):
 # ---------------------------
 @blp.route("/", methods=["GET"])
 @blp.response(200, MoodLogSchema(many=True))  # response schema (array of MoodLog)
-@blp.doc(description="Get all mood logs with optional filters", tags=["mood_log"])
+@blp.doc(description="Get all mood logs with optional filters", tags=["mood_logs"])
 def get_all_mood_logs():
     """
     Get all mood logs
@@ -149,7 +149,7 @@ def get_mood_log(child_id):
 @blp.response(200, MoodLogSchema())  # response schema
 @blp.doc(
     description="Update a mood log by ID",
-    tags=["mood_log"],
+    tags=["mood_logs"],
     parameters=[
         {
             "in": "path",
@@ -181,7 +181,7 @@ def update_mood_log(mood_log_id):
 # ---------------------------
 @blp.route("/<int:mood_log_id>", methods=["DELETE"])
 @blp.response(200, MessageSchema())  # response schema
-@blp.doc(description="Delete a mood log by ID", tags=["mood_log"],
+@blp.doc(description="Delete a mood log by ID", tags=["mood_logs"],
          parameters=[
              {
                  "in": "path",

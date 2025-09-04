@@ -14,7 +14,7 @@ blp = Blueprint("meals", __name__, url_prefix="/meals", description="meals CRUD 
 @blp.route("/", methods=["POST"])
 @blp.arguments(CreateMeal()) # request schema
 @blp.response(201, Meal()) # response schema
-@blp.doc(description="Create a new meal record", tags=["meal"])
+@blp.doc(description="Create a new meal record", tags=["meals"])
 def create_meal(payload):
     # optional runtime check (not documented as error)
     if not Children.query.get(payload["child_id"]):
@@ -40,7 +40,7 @@ def create_meal(payload):
 @blp.response(200, Meal(many=True)) # response schema (array of Meal)
 @blp.doc(
     description="Get all meals for a specific child",
-    tags=["meal"],
+    tags=["meals"],
     parameters=[{
         "name": "child_id", "in": "path", "description": "ID of the child",
         "required": True, "schema": {"type": "integer"}
@@ -58,7 +58,7 @@ def get_meals_by_child(child_id):
 @blp.response(200, Meal()) # response schema
 @blp.doc(
     description="Update a meal by ID",
-    tags=["meal"],
+    tags=["meals"],
     parameters=[{
         "name": "meal_id", "in": "path", "description": "ID of the meal",
         "required": True, "schema": {"type": "integer"}
@@ -76,7 +76,7 @@ def update_meal(payload, meal_id):
 @blp.response(200, MessageSchema()) # response schema
 @blp.doc(
     description="Delete a meal by ID",
-    tags=["meal"],
+    tags=["meals"],
     parameters=[{
         "name": "meal_id", "in": "path", "description": "ID of the meal",
         "required": True, "schema": {"type": "integer"}
