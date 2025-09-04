@@ -8,6 +8,7 @@ from meals.meal_api import blp as MealBlueprint
 import config
 from flask_cors import CORS
 import os
+from schemas.common import ErrorSchema
 
 def create_app():
     app = Flask(__name__)
@@ -15,7 +16,26 @@ def create_app():
 
     db.init_app(app)
     api = Api(app)
+    
+    components = api.spec.components
+    
+    if "Error" not in components.schemas:
+        components.schema("Error", schema=ErrorSchema)
 
+    if "DEFAULT_ERROR" not in components.responses:
+        components.response(
+            "DEFAULT_ERROR",
+            {
+                "description": "Default error response",
+                "content": {
+                    "application/json": {
+                        "schema": {"$ref": "#/components/schemas/Error"}
+                    }
+                },
+            },
+        )
+
+    # ---- Global tags
     api.register_blueprint(RecipesBlueprint)
     api.register_blueprint(MealBlueprint)
     api.register_blueprint(MoodBlueprint)
