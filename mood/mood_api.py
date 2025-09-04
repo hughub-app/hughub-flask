@@ -17,29 +17,22 @@ def start():
 @blp.route("/", methods=["POST"])
 @blp.doc(
     description="Create a new mood log",
-    parameters=[
-        {
-            "in": "query",
-            "name": "child_id",
-            "schema": {"type": "integer"},
-            "required": True,
-            "description": "ID of the child"
-        },
-        {
-            "in": "query",
-            "name": "mood",
-            "schema": {"type": "string"},
-            "required": True,
-            "description": "Mood value"
-        },
-        {
-            "in": "query",
-            "name": "notes",
-            "schema": {"type": "string"},
-            "required": False,
-            "description": "Optional notes for the mood log"
+    requestBody={
+        "required": True,
+        "content": {
+            "application/json": {
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "child_id": {"type": "integer"},
+                        "mood": {"type": "string"},
+                        "notes": {"type": "string"}
+                    },
+                    "required": ["child_id", "mood"]
+                }
+            }
         }
-    ],
+    },
     responses={
         201: {"description": "Mood log created successfully"},
         400: {"description": "Missing required fields"}
