@@ -194,10 +194,11 @@ def delete_mood_log(mood_log_id):
 
 
 @blp.route("/latest/<int:child_id>", methods=["GET"])
-@blp.response(200, MoodLog())  # response schema
+@blp.response(200, MoodLogSchema())  # response schema
 @blp.doc(description="Get the latest mood log for a specific child")
 def get_latest_mood(child_id):
     # ensure the child exists
+    print(child_id)
     child = Children.query.get(child_id)
     if not child:
         return jsonify({"error": "Child not found"}), 404
