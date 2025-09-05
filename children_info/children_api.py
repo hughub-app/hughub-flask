@@ -1,13 +1,12 @@
-# children_info/children_api.py  (or similar path)
 from flask_smorest import Blueprint
 from flask import request
 from extension import db
-from models import Children  # assumes .to_dict() not needed; we return model, marshmallow dumps it
+from models import Children 
 
 from schemas.children import (
     Child, CreateChild, UpdateChild, GetChildrenQuery
 )
-from schemas.common import MessageSchema  # you already have this
+from schemas.common import MessageSchema 
 
 blp = Blueprint("children", __name__, url_prefix="/children", description="Children CRUD API")
 
@@ -41,9 +40,8 @@ def create_child(payload):
     child = Children(
         name=payload["name"],
         gender=payload["gender"],
-        date_of_birth=payload["date_of_birth"],  # marshmallow parsed into date
+        date_of_birth=payload["date_of_birth"],
         meals_per_day=payload["meals_per_day"],
-        # created_at=datetime.utcnow(),  # only if your model doesn't auto-set
     )
     db.session.add(child)
     db.session.commit()
@@ -54,7 +52,7 @@ def create_child(payload):
 # Update
 # ---------------------------
 @blp.route("/<int:child_id>", methods=["PUT"])
-@blp.arguments(UpdateChild)               # partial update allowed by schema
+@blp.arguments(UpdateChild)
 @blp.response(200, Child)
 @blp.doc(description="Update a child by ID")
 def update_child(payload, child_id):
