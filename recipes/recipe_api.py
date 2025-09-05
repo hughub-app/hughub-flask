@@ -5,10 +5,11 @@ from schemas.dietary_guidelines import DietaryGuideline as DietaryGuidelineSchem
 from schemas.ingredients import Ingredient as IngredientSchema, GetIngredientsQuery
 from schemas.recipes import Recipe as RecipeSchema, GetRecipesQuery
 from schemas.recipe_ingredients import RecipeIngredient as RecipeIngredientSchema, GetRecipeIngredientsQuery
+from typing import Optional
 
 blp = Blueprint("recipes", __name__, url_prefix="/recipes", description="Recipe Recommender API")
 
-def _parse_ids(csv: str | None):
+def _parse_ids(csv: Optional[str]):
     if not csv:
         return []
     return [int(x) for x in csv.split(",") if x.strip().isdigit()]
