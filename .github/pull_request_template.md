@@ -4,6 +4,12 @@
 
 ---
 
+## 🎥 Loom Recording
+<!-- Link to the LeanKit card this PR addresses -->
+- [Loom Recording](PASTE_LOOM_LINK_HERE)
+
+---
+
 ## 🔗 API Demo / Verification
 <!-- Provide evidence of API functionality using Loom or screenshots -->
 - [ ] **Loom Recording** of Postman workflow *(optional but encouraged)*
