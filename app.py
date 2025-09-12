@@ -42,6 +42,7 @@ def create_app():
     api.register_blueprint(ChildBlueprint)
     
     app.url_map.strict_slashes = False
+    app.url_map.strict_slashes = True
     
     frontend_urls = os.getenv("FRONTEND_URL", "http://localhost:8081").split(",")
     CORS(
